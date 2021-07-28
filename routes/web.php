@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// паоа контроллер/и экшн (метод)
+// пара контроллер/и экшн (метод)
 Route::get('/', 'App\Http\Controllers\HomeController@index');
 Route::get('/history', 'App\Http\Controllers\HistoryController@index');
 
