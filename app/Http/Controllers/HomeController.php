@@ -32,6 +32,9 @@ class HomeController extends Controller
     public function addForm(Request $request)
     {
         $proxyList = $request->get('proxy');
+        // @todo  прокси лист сперва проверить на isset,чекнуть как лучше завадилировать textarea правильно
+
+
         // 1) валидация
         // 2) парсим строки
         // 3) доабвляю через форич в таблицу каждое прокси (есть дока в ларе способ попроще)
@@ -40,6 +43,7 @@ class HomeController extends Controller
             $proxyArray = explode("\n", $proxyList);
             foreach ($proxyArray as $proxy) {
                 // не уверен, что эта регулярка подходит звучит как временное решение
+                // @todo только от одного до трех для айпи.
                 $isProxy = preg_match("(\d+\.\d+\.\d+\.\d+:\d+)", $proxy);
                 if ($isProxy) {
                     $q = Home::insert([
