@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+error_reporting(E_ALL ^ E_DEPRECATED);
 
 use App\Models\Home;
 use Illuminate\Http\Request;
@@ -10,46 +11,49 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $string = '103.86.49.193:3128
-                    177.33.218.127:3129
-                    103.52.145.97:8080
-                    103.47.67.10:8080
-                    103.98.131.194:8081
-                    45.184.128.201:8181';
-
-        // не уверен, что  это подходит звучит как временное решение
-//        $pattern = "(\d+\.\d+\.\d+\.\d+:\d+)";
-//        $proxyArray = explode("\n", $string);
-//        foreach ($proxyArray as $proxy) {
-//            $isProxy = preg_match($pattern, $proxy);
-//            if ($isProxy) {
-//                dd(explode("\n", $proxy));
-//            }
-//        }
         return view('main');
     }
 
     public function addForm(Request $request)
     {
-        $proxyList = $request->get('proxy');
+        $ipList = $request->get('proxy');
         // @todo  прокси лист сперва проверить на isset,чекнуть как лучше завадилировать textarea правильно
-
-
         // 1) валидация
         // 2) парсим строки
         // 3) доабвляю через форич в таблицу каждое прокси (есть дока в ларе способ попроще)
 
-        if (strlen($proxyList) > 0) {
-            $proxyArray = explode("\n", $proxyList);
-            foreach ($proxyArray as $proxy) {
-                // не уверен, что эта регулярка подходит звучит как временное решение
-                // @todo только от одного до трех для айпи.
-                $isProxy = preg_match("(\d+\.\d+\.\d+\.\d+:\d+)", $proxy);
-                if ($isProxy) {
-                    $q = Home::insert([
-                        'proxy' => $proxy,
-                        'created_at' => DB::raw('now()')
-                    ]);
+        $checkOptions = [
+            'API_KEY' => '42886w-68b734-i3s0bw-839128', // Your API Key.
+            'ASN_DATA' => 1, // Enable ASN data response.
+            'VPN_DETECTION' => 0, // Check for both VPN's and Proxies instead of just Proxies.
+            'RISK_DATA' => 0, // 0 = Off, 1 = Risk Score (0-100), 2 = Risk Score & Attack History.
+            'INF_ENGINE' => 0, // Enable or disable the real-time inference engine.
+            'TLS_SECURITY' => 0, // Enable or disable transport security (TLS).
+            'QUERY_TAGGING' => 0, // Enable or disable query tagging.
+            'CUSTOM_TAG' => 'test', // Specify a custom query tag instead of the default (Domain+Page).
+        ];
+
+        if (isset($ipList) && strlen($ipList) > 0) {
+            $ipArray = explode("\n", $ipList);
+            foreach ($ipArray as $ip) {
+                $regExpCheck = preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip);
+                if ($regExpCheck) {
+                    $start = microtime(true);
+
+                    $isProxy = \proxycheck\proxycheck::check($ip, $checkOptions);
+                    $proxyData = $isProxy[array_keys($isProxy)[2]];
+                    if ($isProxy[array_keys($isProxy)[2]]['proxy'] === 'yes') {
+                        $port = $proxyData['port'] ?? '';
+                        $q = Home::insert([
+                            'ip_port' => $ip . ':' . $port,
+                            'proxy_type' => $proxyData['type'],
+                            'location' => $proxyData['country'],
+                            'timeout' => microtime(true) - $start,
+                            'ip' => $ip,
+                            'created_at' => DB::raw('now()'),
+
+                        ]);
+                    }
                 }
             }
         }
