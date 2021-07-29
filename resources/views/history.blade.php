@@ -1,18 +1,26 @@
 @include('header')
 <main>
-    <div class="my-5 text-center">
+    <div class="text-center">
         <h1 class="display-5 fw-bold">History</h1>
         <table class="table">
             <thead>
             <tr class="table-primary">
-                <th scope="col">Proxy</th>
-                <th scope="col">Check date</th>
+                <th scope="col">ip:port</th>
+                <th scope="col">type</th>
+                <th scope="col">location</th>
+                <th scope="col">timeout</th>
+                <th scope="col">ip</th>
+                <th scope="col">сheck date</th>
             </tr>
             </thead>
             <tbody>
             @foreach($proxyList as $proxy)
                 <tr>
-                    <th scope="row">{{ $proxy['proxy'] }}</th>
+                    <th scope="row">{{ $proxy['ip_port'] }}</th>
+                    <th scope="row">{{ $proxy['proxy_type'] }}</th>
+                    <th scope="row">{{ $proxy['location'] }}</th>
+                    <th scope="row">{{ $proxy['timeout'] }}</th>
+                    <th scope="row">{{ $proxy['ip'] }}</th>
                     <td>{{ date('d-m-Y H:i:s', strtotime($proxy['created_at'])) }}</td>
                 </tr>
             @endforeach
@@ -20,5 +28,6 @@
         </table>
     </div>
 </main>
+@include('footer')
 
 
