@@ -6,6 +6,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 use App\Models\Home;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use proxycheck\proxycheck;
 
 class HomeController extends Controller
 {
@@ -16,12 +17,6 @@ class HomeController extends Controller
 
     public function addForm(Request $request)
     {
-        $ipList = $request->get('proxy');
-        // @todo  прокси лист сперва проверить на isset,чекнуть как лучше завадилировать textarea правильно
-        // 1) валидация
-        // 2) парсим строки
-        // 3) доабвляю через форич в таблицу каждое прокси (есть дока в ларе способ попроще)
-
         $checkOptions = [
             'API_KEY' => '42886w-68b734-i3s0bw-839128', // Your API Key.
             'ASN_DATA' => 1, // Enable ASN data response.
@@ -30,34 +25,59 @@ class HomeController extends Controller
             'INF_ENGINE' => 0, // Enable or disable the real-time inference engine.
             'TLS_SECURITY' => 0, // Enable or disable transport security (TLS).
             'QUERY_TAGGING' => 0, // Enable or disable query tagging.
-            'CUSTOM_TAG' => 'test', // Specify a custom query tag instead of the default (Domain+Page).
         ];
+        $ipList = $request->get('proxy');
 
-        if (isset($ipList) && strlen($ipList) > 0) {
-            $ipArray = explode("\n", $ipList);
-            foreach ($ipArray as $ip) {
-                $regExpCheck = preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $ip);
-                if ($regExpCheck) {
-                    $start = microtime(true);
-
-                    $isProxy = \proxycheck\proxycheck::check($ip, $checkOptions);
-                    $proxyData = $isProxy[array_keys($isProxy)[2]];
-                    if ($isProxy[array_keys($isProxy)[2]]['proxy'] === 'yes') {
-                        $port = $proxyData['port'] ?? '';
-                        $q = Home::insert([
-                            'ip_port' => $ip . ':' . $port,
-                            'proxy_type' => $proxyData['type'],
-                            'location' => $proxyData['country'],
-                            'timeout' => microtime(true) - $start,
-                            'ip' => $ip,
-                            'created_at' => DB::raw('now()'),
-
-                        ]);
-                    }
-                }
-            }
+        if (empty($ipList) && strlen($ipList) == 0) {
+            return view('main', [
+                'error' => 'Please filed textarea'
+            ]);
         }
 
-        return view('main');
+        $checkedIp = [
+            'notPassTest' => 0,
+            'passTest' => 0,
+            'notIp' => 0
+        ];
+
+        $ipArray = explode("\n", $ipList);
+        foreach ($ipArray as $ip) {
+            $regExpCheck = (bool)filter_var(trim($ip), FILTER_VALIDATE_IP);;
+            $isProxy = proxycheck::check($ip, $checkOptions);
+
+            if (!$regExpCheck) {
+                $checkedIp['notIp'] += 1;
+                continue;
+            }
+            $start = microtime(true);
+
+            if ($isProxy['block'] != 'yes') {
+                $checkedIp['notPassTest'] += 1;
+                continue;
+            }
+
+            $proxyData = $isProxy[array_keys($isProxy)[2]];
+            $port = isset($proxyData['port']) ? ':' . $proxyData['port'] : '';
+            $checkTime = round(microtime(true) - $start, 2);
+
+            $insertData = [
+                'ip_port' => $ip . $port,
+                'proxy_type' => $proxyData['type'] ?? 'undefined',
+                'location' => $proxyData['country'] ?? 'undefined',
+                'check_time' => $checkTime,
+                'ip' => $ip,
+                'created_at' => DB::raw('now()')
+            ];
+
+            Home::insert($insertData);
+
+            unset($insertData['created_at']);
+            $checkedIp['checkedIps'] = $insertData;
+            $checkedIp['passTest'] += 1;
+        }
+
+        return view('main', [
+            'result' => $checkedIp
+        ]);
     }
 }

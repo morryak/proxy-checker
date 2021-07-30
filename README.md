@@ -1,34 +1,28 @@
 # Proxy checker
 
-## How to start a project
+### How to start a project
 1) docker-compose up -d
-2) composer install
-
-project host = ```http://localhost:8000```
-
-## adminer
-adminer = ```http://localhost:8080```
-
-```
-server: db
-user:   root
-pas:    root
-```
-
-// написать вручную вход в контейнер и запуск миграции
-
-
-1) В комадной строке узнать название контейнера через
-```
-docker ps
-```
-
-2) Заходим в контейнер 
+2) Enter docker container
 ```
 docker exec -it <CONTAINER ID> bash
 ```
 
-3) Start migration
+3) Install dependencies  
+```
+composer install
+```
+4) Make migration
 ```
 php artisan migrate 
+```
+
+Project host = ```http://localhost:8000```
+
+### adminer
+ ```
+http://localhost:8080
+
+server: db
+user:   root
+pas:    root
 ```

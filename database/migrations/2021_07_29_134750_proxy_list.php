@@ -18,7 +18,7 @@ class ProxyList extends Migration
             $table->string('ip_port');
             $table->string('proxy_type');
             $table->string('location');
-            $table->integer('timeout');
+            $table->integer('check_time');
             $table->string('ip');
             $table->timestamps();
         });
