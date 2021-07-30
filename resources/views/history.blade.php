@@ -8,9 +8,9 @@
                 <th scope="col">ip:port</th>
                 <th scope="col">type</th>
                 <th scope="col">location</th>
-                <th scope="col">timeout</th>
+                <th scope="col">check time</th>
                 <th scope="col">ip</th>
-                <th scope="col">сheck date</th>
+                <th scope="col">check date</th>
             </tr>
             </thead>
             <tbody>
@@ -19,9 +19,9 @@
                     <th scope="row">{{ $proxy['ip_port'] }}</th>
                     <th scope="row">{{ $proxy['proxy_type'] }}</th>
                     <th scope="row">{{ $proxy['location'] }}</th>
-                    <th scope="row">{{ $proxy['timeout'] }}</th>
+                    <th scope="row">{{ $proxy['check_time'] }}</th>
                     <th scope="row">{{ $proxy['ip'] }}</th>
-                    <td>{{ date('d-m-Y H:i:s', strtotime($proxy['created_at'])) }}</td>
+                    <td>{{ date('d.m.Y H:i:s', strtotime($proxy['created_at'])) }}</td>
                 </tr>
             @endforeach
             </tbody>
