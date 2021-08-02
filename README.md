@@ -1,7 +1,10 @@
 # Proxy checker
 
 ### How to start a project
-1) docker-compose up -d
+1) Open console run command
+```
+docker-compose up
+```   
 2) Enter docker container
 ```
 docker exec -it <CONTAINER ID> bash

@@ -10,6 +10,17 @@ use proxycheck\proxycheck;
 
 class HomeController extends Controller
 {
+    // API - proxycheck.io
+    private const CHECK_OPTIONS = [
+        'API_KEY' => '42886w-68b734-i3s0bw-839128', // Your API Key.
+        'ASN_DATA' => 1, // Enable ASN data response.
+        'VPN_DETECTION' => 0, // Check for both VPN's and Proxies instead of just Proxies.
+        'RISK_DATA' => 0, // 0 = Off, 1 = Risk Score (0-100), 2 = Risk Score & Attack History.
+        'INF_ENGINE' => 0, // Enable or disable the real-time inference engine.
+        'TLS_SECURITY' => 0, // Enable or disable transport security (TLS).
+        'QUERY_TAGGING' => 0, // Enable or disable query tagging.
+    ];
+
     public function index()
     {
         return view('main');
@@ -17,15 +28,6 @@ class HomeController extends Controller
 
     public function addForm(Request $request)
     {
-        $checkOptions = [
-            'API_KEY' => '42886w-68b734-i3s0bw-839128', // Your API Key.
-            'ASN_DATA' => 1, // Enable ASN data response.
-            'VPN_DETECTION' => 0, // Check for both VPN's and Proxies instead of just Proxies.
-            'RISK_DATA' => 0, // 0 = Off, 1 = Risk Score (0-100), 2 = Risk Score & Attack History.
-            'INF_ENGINE' => 0, // Enable or disable the real-time inference engine.
-            'TLS_SECURITY' => 0, // Enable or disable transport security (TLS).
-            'QUERY_TAGGING' => 0, // Enable or disable query tagging.
-        ];
         $ipList = $request->get('proxy');
 
         if (empty($ipList) && strlen($ipList) == 0) {
@@ -42,14 +44,14 @@ class HomeController extends Controller
 
         $ipArray = explode("\n", $ipList);
         foreach ($ipArray as $ip) {
+            $start = microtime(true);
             $regExpCheck = (bool)filter_var(trim($ip), FILTER_VALIDATE_IP);;
-            $isProxy = proxycheck::check($ip, $checkOptions);
+            $isProxy = proxycheck::check($ip, self::CHECK_OPTIONS);
 
             if (!$regExpCheck) {
                 $checkedIp['notIp'] += 1;
                 continue;
             }
-            $start = microtime(true);
 
             if ($isProxy['block'] != 'yes') {
                 $checkedIp['notPassTest'] += 1;

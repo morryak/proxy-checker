@@ -11,6 +11,6 @@ class Home extends Model
 
     protected $table = 'proxy_list';
     public $timestamps = true;
-    protected $fillable = ['proxy', 'created_at'];
+    protected $fillable = ['created_at'];
 
 }
