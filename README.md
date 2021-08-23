@@ -29,5 +29,3 @@ server: db
 user:   root
 pas:    root
 ```
-
-dasdsad
