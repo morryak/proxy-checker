@@ -23,7 +23,7 @@ jobs:
         run: git diff --name-only origin/master HEAD '***.php'
 
       - name: ls
-        run: ls -l
+        run: chmod -R 777 app
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
 
