@@ -55,7 +55,7 @@ jobs:
           		  echo "No php files found in commit."
           	else
           		  echo ${FILES}
-          		  $PHP_CS_FIXER fix --config=.php_cs.dist --diff --dry-run  --verbose app/Http/Controllers/HistoryController.php
+          		  $PHP_CS_FIXER  fix --config=.php_cs.dist --diff --dry-run  --verbose   --verbose ${FILES}
           		  git add ${FILES}
           	fi
           else
