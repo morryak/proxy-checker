@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2 # checkout делает pull репозитория и ветки, в котором запущен. Таким образом мы получаем доступ к коду.
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
 #      - name: Get Diff Action
 #        uses: technote-space/get-diff-action@v4.0.1
