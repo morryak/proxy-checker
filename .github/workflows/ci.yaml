@@ -14,14 +14,15 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Get Diff Action
-        uses: technote-space/get-diff-action@v4.0.1
+#      - name: Get Diff Action
+#        uses: technote-space/get-diff-action@v4.0.1
 
       - name: composer install
         run:  composer install --ignore-platform-reqs
 
       - name: git diff origin/master HEAD
-        run: git diff origin/master HEAD
+        run: git diff --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > build/DIFF
+
 
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
