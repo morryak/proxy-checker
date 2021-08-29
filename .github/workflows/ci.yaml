@@ -18,8 +18,8 @@ jobs:
       - name: composer install
         run:  composer install --ignore-platform-reqs
 
-      - name: git diff --name-only origin/main origin/${GITHUB_HEAD_REF}
-        run: git diff --name-only origin/main origin/${GITHUB_HEAD_REF}
+      - name: git diff origin/master HEAD
+        run: git diff origin/master HEAD
 
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
@@ -75,7 +75,7 @@ jobs:
 
       #        - name: Coding Standards Fixer
       #          run: |
-      #            ./vendor/bin/php-cs-fixer --diff --dry-run --verbose fix --config=.php_cs.dist --using-cache=no --path-mode=intersection --diff -- $(git diff origin/master HEAD)
+      #            ./vendor/bin/php-cs-fixer --diff --dry-run --verbose fix --config=.php_cs.dist --using-cache=no --path-mode=intersection --diff -- $(  origin/master HEAD)
       #
       #        - name: Code Style Sniffer
       #          run: |
