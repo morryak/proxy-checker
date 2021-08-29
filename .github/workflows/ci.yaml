@@ -15,9 +15,6 @@ jobs:
       - name: composer install
         run: composer install --ignore-platform-reqs
 
-      - name: git diff origin/master HEAD
-        run: git diff --name-only origin/master HEAD '***.php'
-
       - name: Code quality check
         run: |
           echo "php-cs-fixer start"
