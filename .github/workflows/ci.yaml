@@ -1,7 +1,6 @@
 name: CI
 
-#on: [pull_request]
-on: push
+on: [pull_request]
 
 jobs:
   code-quality:
@@ -9,12 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2 # checkout делает pull репозитория и ветки, в котором запущен. Таким образом мы получаем доступ к коду.
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      #      - name: Get Diff Action
-      #        uses: technote-space/get-diff-action@v4.0.1
 
       - name: composer install
         run: composer install --ignore-platform-reqs
@@ -22,24 +18,9 @@ jobs:
       - name: git diff origin/master HEAD
         run: git diff --name-only origin/master HEAD '***.php'
 
-      - name: ls
-        run: ls
-
-      - name: cd
-        run: cd app
-
-      - name: ls
-        run: ls
-
-      #      - name: chmod
-      #        run: chmod -R 777 app
-
-      #      - name: AFTER
-      #        run: ls -l
-
-      - name: pre-commit
+      - name: Code quality check
         run: |
-          echo "php-cs-fixer pre commit hook start"
+          echo "php-cs-fixer start"
 
           PHP_CS_FIXER="vendor/bin/php-cs-fixer"
           HAS_PHP_CS_FIXER=false
@@ -67,33 +48,4 @@ jobs:
               exit 1
           fi
 
-          echo "php-cs-fixer pre commit hook finish"
-
-
-      #        - name: Split Action
-      #          uses: JungWinter/split@v2
-      #          id: split
-      #          with:
-      #            msg: ${{ needs.build.outputs.changes }}
-      #
-      #        - name: split test!
-      #          run: echo ${{ steps.split.outputs._0 }}
-
-      #        - id: files2
-      #          uses: jitterbit/get-changed-files@v1
-      #        - run: |
-      #            for changed_file in ${{ steps.files2.outputs.added_modified }}; do
-      #               ./vendor/bin/php-cs-fixer --diff --dry-run --verbose ${changed_file}."
-      #            done
-
-      #        - name: Coding Standards Fixer
-      #          run: |
-      #            ./vendor/bin/php-cs-fixer --diff --dry-run --verbose fix --config=.php_cs.dist --using-cache=no --path-mode=intersection --diff -- $(  origin/master HEAD)
-      #
-      #        - name: Code Style Sniffer
-      #          run: |
-      #            ./vendor/bin/phpcs
-      # проверить псалм
-  #      - name: Static analysis
-  #        run: |
-  #          ./vendor/bin/psalm.phar
+          echo "php-cs-fixer finish"
