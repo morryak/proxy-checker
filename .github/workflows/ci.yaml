@@ -14,6 +14,8 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Get Diff Action
+        uses: technote-space/get-diff-action@v4.0.1
 
       - name: composer install
         run:  composer install --ignore-platform-reqs
