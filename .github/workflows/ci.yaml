@@ -22,16 +22,19 @@ jobs:
       - name: git diff origin/master HEAD
         run: git diff --name-only origin/master HEAD '***.php'
 
-      - name: ls BEFORE
-        run: ls -l
+      - name: cd
+        run: cd /app
 
-      - name: chmod
-        run: chmod -R 777 app
+      - name: ls
+        run: ls
+
+#      - name: chmod
+#        run: chmod -R 777 app
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
 
-      - name: AFTER
-        run: ls -l
+#      - name: AFTER
+#        run: ls -l
 
       - name: pre-commit
         run: |
