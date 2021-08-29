@@ -14,8 +14,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      #        - name: ls!!!
-      #          run: ls
+      - name: ls!!!
+        run: ls
 
       - name: composer install
         run:  composer install --ignore-platform-reqs
