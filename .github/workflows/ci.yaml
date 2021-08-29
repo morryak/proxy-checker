@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2 # checkout делает pull репозитория и ветки, в котором запущен. Таким образом мы получаем доступ к коду.
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
 
       - name: composer install
