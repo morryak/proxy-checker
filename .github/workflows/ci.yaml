@@ -18,8 +18,8 @@ jobs:
       - name: composer install
         run:  composer install --ignore-platform-reqs
 
-      - name: git diff --name-only origin/main origin/${GITHUB_HEAD_REF}
-        run: git diff --name-only origin/main origin/${GITHUB_HEAD_REF}
+      - name: git status --porcelain | grep -E '^[AM] +(app|public|Tests|views).*\.php$' | cut -c 4- | tr '\n' ' '`
+        run: git status --porcelain | grep -E '^[AM] +(app|public|Tests|views).*\.php$' | cut -c 4- | tr '\n' ' '`
 
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
