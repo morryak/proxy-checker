@@ -13,11 +13,11 @@ jobs:
         with:
           fetch-depth: 0
 
-#      - name: Get Diff Action
-#        uses: technote-space/get-diff-action@v4.0.1
+      #      - name: Get Diff Action
+      #        uses: technote-space/get-diff-action@v4.0.1
 
       - name: composer install
-        run:  composer install --ignore-platform-reqs
+        run: composer install --ignore-platform-reqs
 
       - name: git diff origin/master HEAD
         run: git diff --name-only origin/master HEAD '***.php'
@@ -31,11 +31,11 @@ jobs:
       - name: ls
         run: ls
 
-#      - name: chmod
-#        run: chmod -R 777 app
+      #      - name: chmod
+      #        run: chmod -R 777 app
 
-#      - name: AFTER
-#        run: ls -l
+      #      - name: AFTER
+      #        run: ls -l
 
       - name: pre-commit
         run: |
@@ -55,7 +55,7 @@ jobs:
           		  echo "No php files found in commit."
           	else
           		  echo ${FILES}
-          		  $PHP_CS_FIXER fix --config=.php_cs.dist --verbose ${FILES}
+          		  $PHP_CS_FIXER fix --config=.php_cs.dist --dry-run  --verbose ${FILES}
           		  git add ${FILES}
           	fi
           else
