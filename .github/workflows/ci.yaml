@@ -22,7 +22,8 @@ jobs:
       - name: git diff origin/master HEAD
         run: git diff --name-only origin/master HEAD '***.php'
 
-
+      - name: ls
+        run: ls -l
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
 
