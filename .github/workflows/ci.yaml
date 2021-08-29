@@ -20,7 +20,7 @@ jobs:
         run:  composer install --ignore-platform-reqs
 
       - name: git diff origin/master HEAD
-        run: git diff --name-only origin/master HEAD
+        run: git diff --name-only origin/master HEAD '***.php'
 
 
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
