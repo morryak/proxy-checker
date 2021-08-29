@@ -38,7 +38,7 @@ jobs:
           fi
 
           if $HAS_PHP_CS_FIXER; then
-              FILES=` git status --porcelain | grep -E '^[AM] +(app|public|Tests|views).*\.php$' | cut -c 4- | tr '\n' ' '`
+              FILES=` git diff --name-only origin/master HEAD '***.php' | cut -c 4- | tr '\n' ' '`
               if [ -z "$FILES" ]
           	then
           		  echo "No php files found in commit."
