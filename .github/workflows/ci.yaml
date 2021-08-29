@@ -26,7 +26,7 @@ jobs:
         run: ls
 
       - name: cd
-        run: cd /app
+        run: cd app
 
       - name: ls
         run: ls
