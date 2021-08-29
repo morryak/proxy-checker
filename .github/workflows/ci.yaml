@@ -18,8 +18,8 @@ jobs:
       - name: composer install
         run:  composer install --ignore-platform-reqs
 
-      - name: git status
-        run: git status
+      - name: git diff --name-only master
+        run: git diff --name-only master
 
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
 #        run:  composer require "friendsofphp/php-cs-fixer":2.16
