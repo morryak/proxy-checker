@@ -8,7 +8,6 @@ jobs:
     name: Code quality check
     runs-on: ubuntu-latest
     steps:
-      #        - run: echo ${{ needs.build.outputs.changes }}
       - name: Checkout
         uses: actions/checkout@v2 # checkout делает pull репозитория и ветки, в котором запущен. Таким образом мы получаем доступ к коду.
         with:
@@ -21,7 +20,7 @@ jobs:
         run:  composer install --ignore-platform-reqs
 
       - name: git diff origin/master HEAD
-        run: git diff --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > build/DIFF
+        run: git diff
 
 
       #      - name: composer require "friendsofphp/php-cs-fixer":2.16
