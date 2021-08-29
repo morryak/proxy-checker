@@ -20,8 +20,8 @@ jobs:
       - name: composer install
         run:  composer install --ignore-platform-reqs
 
-      - name: composer require "friendsofphp/php-cs-fixer":2.16
-        run:  composer require "friendsofphp/php-cs-fixer":2.16
+#      - name: composer require "friendsofphp/php-cs-fixer":2.16
+#        run:  composer require "friendsofphp/php-cs-fixer":2.16
 
       - name: pre-commit
         run: |
