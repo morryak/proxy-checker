@@ -9,7 +9,7 @@ class HistoryController extends Controller
 {
     public function index()
     {
-        $testArray = array();
+        $testArray = [];
         $proxyList = Home::get()->reverse()->toArray();
 
         return view('history', [
