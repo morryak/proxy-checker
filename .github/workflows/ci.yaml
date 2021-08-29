@@ -1,0 +1,82 @@
+name: CI
+
+#on: [pull_request]
+on: push
+
+jobs:
+  code-quality:
+    name: Code quality check
+    runs-on: ubuntu-latest
+    steps:
+      #        - run: echo ${{ needs.build.outputs.changes }}
+      - name: Checkout
+        uses: actions/checkout@v2 # checkout делает pull репозитория и ветки, в котором запущен. Таким образом мы получаем доступ к коду.
+        with:
+          fetch-depth: 0
+
+      #        - name: ls!!!
+      #          run: ls
+
+      - name: composer require "friendsofphp/php-cs-fixer":2.16
+        run:  composer require "friendsofphp/php-cs-fixer":2.16
+
+      - name: pre-commit
+        run: |
+          echo "php-cs-fixer pre commit hook start"
+
+          PHP_CS_FIXER="vendor/bin/php-cs-fixer"
+          HAS_PHP_CS_FIXER=false
+
+          if [ -x $PHP_CS_FIXER ]; then
+              HAS_PHP_CS_FIXER=true
+          fi
+
+          if $HAS_PHP_CS_FIXER; then
+              FILES=` git status --porcelain | grep -E '^[AM] +(App|public|Tests|views).*\.php$' | cut -c 4- | tr '\n' ' '`
+              if [ -z "$FILES" ]
+          	then
+          		  echo "No php files found in commit."
+          	else
+          		  echo ${FILES}
+          		  $PHP_CS_FIXER fix --config=.php_cs.dist --verbose ${FILES}
+          		  git add ${FILES}
+          	fi
+          else
+              echo ""
+              echo "Please install php-cs-fixer, e.g.:"
+              echo ""
+              echo "  composer require --dev fabpot/php-cs-fixer:dev-master"
+              echo ""
+              exit 1
+          fi
+
+          echo "php-cs-fixer pre commit hook finish"
+
+
+      #        - name: Split Action
+      #          uses: JungWinter/split@v2
+      #          id: split
+      #          with:
+      #            msg: ${{ needs.build.outputs.changes }}
+      #
+      #        - name: split test!
+      #          run: echo ${{ steps.split.outputs._0 }}
+
+      #        - id: files2
+      #          uses: jitterbit/get-changed-files@v1
+      #        - run: |
+      #            for changed_file in ${{ steps.files2.outputs.added_modified }}; do
+      #               ./vendor/bin/php-cs-fixer --diff --dry-run --verbose ${changed_file}."
+      #            done
+
+      #        - name: Coding Standards Fixer
+      #          run: |
+      #            ./vendor/bin/php-cs-fixer --diff --dry-run --verbose fix --config=.php_cs.dist --using-cache=no --path-mode=intersection --diff -- $(git diff origin/master HEAD)
+      #
+      #        - name: Code Style Sniffer
+      #          run: |
+      #            ./vendor/bin/phpcs
+      # проверить псалм
+  #      - name: Static analysis
+  #        run: |
+  #          ./vendor/bin/psalm.phar
