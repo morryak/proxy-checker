@@ -1,0 +1,48 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  code-quality:
+    name: Code quality check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: composer install
+        run: composer install --ignore-platform-reqs
+
+      - name: Code quality check
+        run: |
+          echo "php-cs-fixer start"
+
+          PHP_CS_FIXER="vendor/bin/php-cs-fixer"
+          HAS_PHP_CS_FIXER=false
+
+          if [ -x $PHP_CS_FIXER ]; then
+              HAS_PHP_CS_FIXER=true
+          fi
+
+          if $HAS_PHP_CS_FIXER; then
+              FILES=` git diff --name-only origin/master HEAD '***.php'`
+              if [ -z "$FILES" ]
+          	then
+          		  echo "No php files found in commit."
+          	else
+          		  echo ${FILES}
+          		  $PHP_CS_FIXER  fix --config=.php_cs.dist --diff --dry-run  --verbose   --verbose ${FILES}
+          		  git add ${FILES}
+          	fi
+          else
+              echo ""
+              echo "Please install php-cs-fixer, e.g.:"
+              echo ""
+              echo "  composer require --dev fabpot/php-cs-fixer:dev-master"
+              echo ""
+              exit 1
+          fi
+
+          echo "php-cs-fixer finish"
